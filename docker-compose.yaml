@@ -1,4 +1,11 @@
 services:
+
+  backend_redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    networks:
+      - store-network
   # Backend services
   backend_app1:
     build: ./backend
@@ -9,6 +16,8 @@ services:
     networks:
       - store-network
       - backend-internal-network
+    depends_on:
+      - backend_redis
   backend_app2:
     build: ./backend
     ports:
@@ -18,6 +27,8 @@ services:
     networks:
       - store-network
       - backend-internal-network
+    depends_on:
+      - backend_redis
   backend_lb:
     build: ./backend/loadbalancer
     ports:

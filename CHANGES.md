@@ -3,6 +3,7 @@
 ### Frontend
 
   - Updated the page to display the price of the selected product
+  - Updated the docker image to the latest version using alpine
 
 **To do**
   - Could use tanstack/query like the dashboard to cache data
@@ -16,6 +17,7 @@
 - Added code to make calls to the legacy api.
 - Added basic redis instance
 - Added wrapper client to cache results coming from legacy api.
+- updated the base docker image to the latest version
 
 **To do**
 a lot of cleanup is needed in the index.ts file.

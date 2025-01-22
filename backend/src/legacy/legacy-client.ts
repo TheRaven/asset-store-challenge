@@ -1,36 +1,48 @@
 import { Client } from "./client";
 import { Product } from "./products";
-import axios from 'axios';
+import { AxiosStatic } from 'axios';
 
 
 export class LegacyClient implements Client {
 
-    constructor(private readonly legacyUrl: string) { 
-
-    }
+    constructor(private readonly legacyUrl: string, private readonly axios: AxiosStatic) { }
 
 
     public async getProducts(): Promise<Product[]> {
-        const products = await axios.get(`${this.legacyUrl}/products`);
 
-        if(products.data && products.data.products && products.status === 200) {
-          return products.data.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name));
-        }
+      const productsUrl = `${this.legacyUrl}/products`;
 
-        return [];
+      console.debug(`Fetching products`);
+      const products = await this.axios.get(productsUrl);
 
+      if(products.status !== 200) {
+        throw new Error(products.statusText);
+      }
+
+
+      if(products.data && products.data.products) {
+        console.debug(`Found ${products.data.products.length} products. Sorting by name`);
+        return products.data.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name));
+      }
+      
+      throw new Error('Failed to fetch products');
+      
     }
 
     public async getPrice(productId: string): Promise<number> {
-      const price = await axios.get(`${this.legacyUrl}/products/price?id=${productId}`);
+      const price = await this.axios.get(`${this.legacyUrl}/products/price?id=${productId}`);
 
-      if(price.data && price.data.price && price.status === 200) {
+      if(price.status !== 200) {
+        throw new Error(price.statusText);
+      }
+
+
+      if(price.data && price.data.price) {
+        console.log(`Found price ${price.data.price} for product ${productId}`);
         return price.data.price;
       }
 
-      return 0;
-
-
+      throw new Error('Failed to fetch price');
     }
 
 }

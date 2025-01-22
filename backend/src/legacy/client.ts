@@ -1,9 +1,8 @@
-import { Price, Product } from "./products";
+import { Product } from "./products";
 
 export interface Client {
 
-
     getProducts(): Promise<Product[]>;
 
-    getPrice(productId: string): Promise<Price>;
+    getPrice(productId: string): Promise<number>;
 }

@@ -11,6 +11,10 @@ describe(LegacyClient.name, () => {
     legacyClient = new LegacyClient('http://legacy-backend:9991/api', axiosMock);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('getProducts', () => {
     it('should get the products list', () => {
       const fakeProducts = [
